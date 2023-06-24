@@ -1,0 +1,41 @@
+import { STATUS } from "../constants/config.js";
+import { UserModel } from "../models/UserModel.js";
+import { genPassword } from "../utils/authUtils.js";
+
+const loginController = async (req, res, next) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
+
+const registerController = async (req, res, next) => {
+  try {
+    const saltHash = genPassword(req.body?.password);
+    const user = await UserModel.create({
+      username: req.body.username,
+      hash: saltHash.hash,
+      salt: saltHash.salt,
+    });
+
+    if (user?._id) {
+      return res.status(200).json({
+        success: true,
+        status: STATUS.sucess,
+        message: "User created",
+        data: { username: user.username },
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      status: STATUS.failure,
+      message: "Could not create user",
+      data: {},
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { loginController, registerController };

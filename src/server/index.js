@@ -6,6 +6,8 @@ import connectDB from "./db/conn.js";
 import cors from "cors";
 import errorHandler from "./middlewares/errorHandlerMiddleware.js";
 import express from "express";
+import { loginRouter } from "./routers/loginRouter.js";
+import passport from "passport";
 import session from "express-session";
 import { v4 as uuidv4 } from "uuid";
 
@@ -36,13 +38,18 @@ app.use(
     secret: "secret",
     resave: false,
     saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+    },
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 // server status check
 app.get("/", (req, res, next) => {
   res.send({
-    sucess: true,
+    success: true,
     status: STATUS.sucess,
     message: "Server running",
     data: {},
@@ -50,7 +57,7 @@ app.get("/", (req, res, next) => {
 });
 
 // Routers
-
+app.use("/auth", loginRouter);
 // error logging and handling
 app.use(errorHandler);
 

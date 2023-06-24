@@ -1,3 +1,4 @@
 export const STATUS = {
-  sucess: "Sucess",
+  sucess: "Success",
+  failure: "Failure",
 };
