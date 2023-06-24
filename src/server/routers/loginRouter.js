@@ -1,5 +1,6 @@
 import {
   loginController,
+  loginFailureController,
   registerController,
 } from "../middlewares/loginMiddleware.js";
 
@@ -52,7 +53,12 @@ passport.deserializeUser(async (userId, done) => {
 // ---------------------------------------------------------------------
 const loginRouter = Router();
 
-loginRouter.post("/login", loginController);
+loginRouter.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/auth/login/failure" }),
+  loginController
+);
+loginRouter.get("/login/failure", loginFailureController);
 loginRouter.post("/register", registerController);
 
 export { loginRouter };
