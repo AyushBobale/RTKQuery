@@ -29,7 +29,6 @@ app.use(
 app.use(
   session({
     genid: (req) => {
-      console.log("1. Inside session", req.sessionID);
       return uuidv4();
     },
     store: MongoStore.create({

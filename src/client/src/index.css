@@ -3,3 +3,11 @@
   margin: 0;
   box-sizing: border-box;
 }
+:root {
+  --navbar-height: 4rem;
+}
+
+.root-body {
+  margin-top: var(--navbar-height);
+  padding: 1rem;
+}
