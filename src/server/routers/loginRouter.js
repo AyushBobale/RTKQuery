@@ -2,7 +2,7 @@ import {
   loginController,
   loginFailureController,
   registerController,
-} from "../middlewares/loginMiddleware.js";
+} from "../controllers/loginController.js";
 
 import LocalStrategy from "passport-local";
 import { Router } from "express";

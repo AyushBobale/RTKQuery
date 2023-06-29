@@ -3,10 +3,15 @@ import * as yup from "yup";
 import React, { useEffect } from "react";
 
 import { useFormik } from "formik";
-import { useLoginMutation } from "../../redux/slices/loginSlice";
+import {
+  useLoginMutation,
+  useRegisterMutation,
+} from "../../redux/slices/loginSlice";
 import { useServerStatusQuery } from "../../redux/slices/rootSlice";
 
 const Register = () => {
+  const [login] = useLoginMutation();
+  const [register] = useRegisterMutation();
   const registerForm = useFormik({
     initialValues: {
       username: "",
@@ -35,18 +40,17 @@ const Register = () => {
         ),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      if (values.password != values.c_password) {
+        return;
+      }
+
+      register({
+        username: values.username,
+        password: values.password,
+      });
     },
   });
 
-  const [login] = useLoginMutation();
-
-  useEffect(() => {
-    login({
-      username: "test",
-      password: "test",
-    });
-  }, []);
   //
   const serverStatus = useServerStatusQuery();
   console.log(serverStatus.data);
@@ -103,7 +107,7 @@ const Register = () => {
           />
         </div>
       </div>
-      <button onClick={registerForm.handleSubmit}>Submit</button>
+      <button onClick={registerForm.handleSubmit}>Register</button>
     </div>
   );
 };
