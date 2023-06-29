@@ -1,4 +1,5 @@
 import {
+  getUserDataController,
   loginController,
   loginFailureController,
   registerController,
@@ -40,13 +41,16 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (userId, done) => {
   try {
+    console.log("Log: Debug 1", userId);
     const user = await UserModel.findById(userId);
+    console.log(!!user?._id);
     if (user?._id) {
-      done(null, user);
+      done(false, user);
     } else {
-      done(null, null);
+      done(false, null);
     }
   } catch (error) {
+    console.log(error);
     done(error, null);
   }
 });
@@ -58,6 +62,12 @@ loginRouter.post(
   passport.authenticate("local", { failureRedirect: "/auth/login/failure" }),
   loginController
 );
+loginRouter.get(
+  "/user_data",
+  passport.authenticate("local", { failureRedirect: "/auth/login/failure" }),
+  getUserDataController
+);
+// non auth routes
 loginRouter.get("/login/failure", loginFailureController);
 loginRouter.post("/register", registerController);
 

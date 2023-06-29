@@ -1,16 +1,19 @@
 import * as yup from "yup";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useFormik } from "formik";
 import {
   useLoginMutation,
   useRegisterMutation,
+  useUserDataQuery,
 } from "../../redux/slices/loginSlice";
 import { useServerStatusQuery } from "../../redux/slices/rootSlice";
 
 const Login = () => {
-  const [login] = useLoginMutation();
+  const [buttonText, setButtonText] = useState("Login");
+  const [login, result] = useLoginMutation();
+  const userData = useUserDataQuery();
   const loginForm = useFormik({
     initialValues: {
       username: "",
@@ -22,17 +25,24 @@ const Login = () => {
         .string("Must be a string")
         .required("Please Enter your password"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       login({
         username: values.username,
         password: values.password,
       });
+      resetForm();
     },
   });
-
-  //
-  const serverStatus = useServerStatusQuery();
-  console.log(serverStatus.data);
+  useEffect(() => {
+    console.log(userData.data);
+  }, []);
+  useEffect(() => {
+    console.log("succes useeffect called", result.isSuccess);
+    if (result.isSuccess) {
+      console.log("Logged in sucessfully ");
+      setButtonText("Logged In !!!");
+    }
+  }, [result.isSuccess]);
 
   return (
     <div>
@@ -70,7 +80,7 @@ const Login = () => {
           />
         </div>
       </div>
-      <button onClick={loginForm.handleSubmit}>Login</button>
+      <button onClick={loginForm.handleSubmit}>{buttonText}</button>
     </div>
   );
 };

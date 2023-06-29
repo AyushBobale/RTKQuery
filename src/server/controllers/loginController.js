@@ -15,6 +15,19 @@ const loginController = async (req, res, next) => {
   }
 };
 
+const getUserDataController = async (req, res, next) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      status: STATUS.sucess,
+      message: "Logged In",
+      data: { username: req?.session?.user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const loginFailureController = async (req, res, next) => {
   return res.status(401).json({
     success: false,
@@ -53,4 +66,9 @@ const registerController = async (req, res, next) => {
   }
 };
 
-export { loginController, registerController, loginFailureController };
+export {
+  loginController,
+  registerController,
+  loginFailureController,
+  getUserDataController,
+};

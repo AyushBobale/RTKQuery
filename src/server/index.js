@@ -24,6 +24,7 @@ app.use(
       "http://192.168.1.5:3000",
       "http://localhost:3000",
     ],
+    credentials: true,
   })
 );
 app.use(
